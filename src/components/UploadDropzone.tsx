@@ -24,13 +24,14 @@ export function UploadDropzone({ onUploadStart }: Props) {
 
   const handleFile = useCallback(async (file: File) => {
     setError(null)
-    const supported = ['application/pdf', 'application/epub+zip']
-    if (!supported.includes(file.type)) {
+    const isEpub = file.type === 'application/epub+zip' || file.name.endsWith('.epub')
+    const isPdf = file.type === 'application/pdf' || file.name.endsWith('.pdf')
+    if (!isEpub && !isPdf) {
       setError('Only PDF and EPUB files are supported')
       return
     }
 
-    if (file.type === 'application/epub+zip') {
+    if (isEpub) {
       // For EPUBs, fetch sections first so the user can skip front matter
       setLoadingSections(true)
       setPendingFile(file)
